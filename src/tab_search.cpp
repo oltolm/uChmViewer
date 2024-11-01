@@ -41,7 +41,6 @@
 
 #include "i18n.h"
 
-#include "config.h"         // pConfig
 #include "ebook_search.h"   // EBookSearch
 #include "mainwindow.h"     // ::mainWindow
 #include "settings.h"       // Settings::search_saved_settings_t

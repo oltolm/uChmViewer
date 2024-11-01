@@ -371,13 +371,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="boxUseSingleClick">
-            <property name="text">
-             <string>Always use a single click to open the elements instead of OS-specific activation</string>
-            </property>
-           </widget>
-          </item>
-          <item>
             <widget class="QCheckBox" name="boxTabOpenInForeground">
              <property name="text">
               <string>Open tabs in foreground</string>

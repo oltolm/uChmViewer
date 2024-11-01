@@ -27,7 +27,6 @@
 #include <QUrl>
 #include <QVector>
 
-#include "config.h"         // pConfig
 #include "ebook.h"          // EBookIndexEntry
 #include "mainwindow.h"     // :mainWindow
 #include "showwaitcursor.h" // ShowWaitCursor
