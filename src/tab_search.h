@@ -54,6 +54,7 @@ class TabSearch : public QWidget, public Ui::TabSearch
 		void    onHelpClicked( const QString& );
 		void    onReturnPressed ();
 		void    onItemActivated( QTreeWidgetItem* item, int );
+		void    onCurrentItemChanged( QTreeWidgetItem* current, QTreeWidgetItem* );
 
 		// For index generation
 		void    onProgressStep( int value, const QString& stepName );

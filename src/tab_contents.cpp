@@ -28,6 +28,7 @@
 #include "ebook.h"          // EBookTocEntry
 #include "config.h"         // pConfig
 #include "mainwindow.h"     // ::mainWindow
+#include "viewwindow.h"     // ViewWindow
 #include "showwaitcursor.h" // ShowWaitCursor
 #include "tab_contents.h"   // TabContents, QWidget
 #include "treeitem_toc.h"   // TreeItem_TOC
@@ -43,20 +44,15 @@ TabContents::TabContents( QWidget* parent )
 	tree->header()->hide();
 
 	// Handle clicking on m_contentsWindow element
-	if ( pConfig->m_tabUseSingleClick )
-	{
-		connect( tree,
-		         SIGNAL( itemClicked(QTreeWidgetItem*, int)),
-		         this,
-		         SLOT( onClicked ( QTreeWidgetItem*, int ) ) );
-	}
-	else
-	{
-		connect( tree,
-		         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
-		         this,
-		         SLOT( onClicked ( QTreeWidgetItem*, int ) ) );
-	}
+	connect( tree,
+	         SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* )),
+	         this,
+	         SLOT( onCurrentItemChanged ( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+
+	connect( tree,
+	         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
+	         this,
+	         SLOT( onItemActivated ( QTreeWidgetItem*, int ) ) );
 
 	// Activate custom context menu, and connect it
 	tree->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -134,7 +130,7 @@ void TabContents::refillTableOfContents( )
 			item = new TreeItem_TOC( tree, lastchild[indent], data[i].name, data[i].url, data[i].iconid );
 		else
 		{
-			// New non-root entry. It is possible (for some buggy CHMs) that there is no previous entry: previoous entry had indent 1,
+			// New non-root entry. It is possible (for some buggy CHMs) that there is no previous entry: previous entry had indent 1,
 			// and next entry has indent 3. Backtracking it up, creating missing entries.
 			if ( rootentry[indent - 1] == 0 )
 				qFatal("Child entry indented as %d with no root entry!", indent);
@@ -199,12 +195,19 @@ void TabContents::showItem( TreeItem_TOC* item )
 	tree->scrollToItem( item );
 }
 
-void TabContents::onClicked(QTreeWidgetItem* item, int)
+void TabContents::onItemActivated( QTreeWidgetItem* item, int )
 {
-	if ( !item )
+	onCurrentItemChanged(item, nullptr);
+	// Focus on the view window so keyboard scroll works
+	::mainWindow->currentBrowser()->setFocus( Qt::OtherFocusReason );
+}
+
+void TabContents::onCurrentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem*)
+{
+	if ( !current )
 		return;
 
-	TreeItem_TOC* treeitem = (TreeItem_TOC*) item;
+	TreeItem_TOC* treeitem = (TreeItem_TOC*) current;
 	::mainWindow->activateUrl( treeitem->getUrl() );
 }
 
