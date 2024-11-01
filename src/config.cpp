@@ -65,7 +65,6 @@ Config::Config()
 	browser.highlightSearchResults = settings.value( "browser/highlightsearchresults", true ).toBool();
 
 	m_tocOpenAllEntries = settings.value( "browser/tocopenallentries", true ).toBool();
-	m_tabUseSingleClick = settings.value( "browser/tabusesingleclick", true ).toBool();
 	m_tabOpenInForeground = settings.value( "browser/tabopeninforeground", false ).toBool();
 
 	QDir dir;
@@ -101,7 +100,6 @@ void Config::save( )
 	settings.setValue( "browser/highlightsearchresults", browser.highlightSearchResults );
 
 	settings.setValue( "browser/tocopenallentries", m_tocOpenAllEntries );
-	settings.setValue( "browser/tabusesingleclick", m_tabUseSingleClick );
 	settings.setValue( "browser/tabopeninforeground", m_tabOpenInForeground );
 }
 
