@@ -83,7 +83,6 @@ DialogSetup::DialogSetup(QWidget* parent)
 	m_enableOfflineStorage->setChecked( pConfig->browser.enableOfflineStorage );
 	m_enableLocalStorage->setChecked( pConfig->browser.enableLocalStorage );
 	m_openAllTOCEntries->setChecked( pConfig->m_tocOpenAllEntries );
-	boxUseSingleClick->setChecked( pConfig->m_tabUseSingleClick );
 	boxTabOpenInForeground->setChecked( pConfig->m_tabOpenInForeground );
 
 #if defined (USE_WEBENGINE)
@@ -163,7 +162,6 @@ void DialogSetup::accept()
 	Check_Need_Restart( m_enablePlugins, &pConfig->browser.enablePlugins, &need_restart );
 	Check_Need_Restart( m_enableOfflineStorage, &pConfig->browser.enableOfflineStorage, &need_restart );
 	Check_Need_Restart( m_enableLocalStorage, &pConfig->browser.enableLocalStorage, &need_restart );
-	Check_Need_Restart( boxUseSingleClick, &pConfig->m_tabUseSingleClick, &need_restart );
 
 	pConfig->m_tabOpenInForeground = boxTabOpenInForeground->isChecked();
 
