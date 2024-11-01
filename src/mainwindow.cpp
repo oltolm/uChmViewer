@@ -461,10 +461,6 @@ bool MainWindow::openPage( const QUrl& url, unsigned int flags )
 			m_navPanel->findUrlInContents( url );
 	}
 
-	// Focus on the view window so keyboard scroll works; do not do it for the background tabs
-	if ( (flags & OPF_BACKGROUND) == 0 )
-		vwnd->setFocus( Qt::OtherFocusReason );
-
 	return true;
 }
 
