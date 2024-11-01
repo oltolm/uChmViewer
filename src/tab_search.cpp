@@ -46,6 +46,7 @@
 #include "mainwindow.h"     // ::mainWindow
 #include "settings.h"       // Settings::search_saved_settings_t
 #include "showwaitcursor.h" // ShowWaitCursor
+#include "viewwindow.h"     // ViewWindow
 #include "tab_search.h"     // TabSearch, QWidget
 
 
@@ -111,20 +112,15 @@ TabSearch::TabSearch( QWidget* parent )
 	         SLOT( onReturnPressed() ) );
 
 	// Clicking on tree element
-	if ( pConfig->m_tabUseSingleClick )
-	{
-		connect( tree,
-		         SIGNAL( itemClicked(QTreeWidgetItem*, int)),
-		         this,
-		         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
-	}
-	else
-	{
-		connect( tree,
-		         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
-		         this,
-		         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
-	}
+	connect( tree,
+	         SIGNAL( currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*) ),
+	         this,
+	         SLOT( onCurrentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+
+	connect( tree,
+	         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
+	         this,
+	         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
 
 	// Activate custom context menu, and connect it
 	tree->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -189,13 +185,20 @@ void TabSearch::onReturnPressed( )
 		::mainWindow->showInStatusBar( i18n( "Search failed") );
 }
 
-void TabSearch::onItemActivated( QTreeWidgetItem* item, int )
+void TabSearch::onCurrentItemChanged( QTreeWidgetItem* current, QTreeWidgetItem* )
 {
-	if ( !item )
+	if ( !current )
 		return;
 
-	SearchTreeViewItem* treeitem = (SearchTreeViewItem*) item;
+	SearchTreeViewItem* treeitem = (SearchTreeViewItem*) current;
 	::mainWindow->openPage( treeitem->getUrl() );
+}
+
+void TabSearch::onItemActivated( QTreeWidgetItem* item, int )
+{
+	onCurrentItemChanged(item, nullptr);
+	// Focus on the view window so keyboard scroll works
+	::mainWindow->currentBrowser()->setFocus( Qt::OtherFocusReason );	
 }
 
 void TabSearch::restoreSettings( const Settings::search_saved_settings_t& settings )

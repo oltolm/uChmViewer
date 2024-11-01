@@ -43,8 +43,9 @@ class TabIndex : public QWidget, public Ui::TabIndex
 	private slots:
 		void    onTextChanged ( const QString& newvalue);
 		void    onReturnPressed ();
-		void    onItemActivated ( QTreeWidgetItem* item, int column );
+		void    onItemActivated ( QTreeWidgetItem* item, int );
 		void    onContextMenuRequested ( const QPoint& point );
+		void    onCurrentItemChanged ( QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
 	private:
 		void    showEvent ( QShowEvent* );

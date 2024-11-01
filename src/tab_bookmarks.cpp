@@ -88,20 +88,15 @@ TabBookmarks::TabBookmarks( QWidget* parent )
 	// UIC code
 	setupUi( this );
 
-	if ( pConfig->m_tabUseSingleClick )
-	{
-		connect( list,
-		         SIGNAL( itemClicked(QListWidgetItem*)),
-		         this,
-		         SLOT( onItemActivated( QListWidgetItem*)) );
-	}
-	else
-	{
-		connect( list,
-		         SIGNAL( itemActivated(QListWidgetItem*)),
-		         this,
-		         SLOT( onItemActivated( QListWidgetItem*)) );
-	}
+	connect( list,
+	         SIGNAL( currentItemChanged( QListWidgetItem*, QListWidgetItem* ) ),
+	         this,
+	         SLOT( onCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ) ) );
+
+	connect( list,
+	         SIGNAL( itemActivated( QListWidgetItem*, int ) ),
+	         this,
+	         SLOT( onItemActivated( QListWidgetItem*, int )) );
 
 	connect( btnAdd,
 	         SIGNAL( clicked () ),
@@ -235,12 +230,12 @@ void TabBookmarks::createMenu( QMenu* menuBookmarks )
 	m_menuBookmarks = menuBookmarks;
 }
 
-void TabBookmarks::onItemActivated(QListWidgetItem* item)
+void TabBookmarks::onCurrentItemChanged(QListWidgetItem* current, QListWidgetItem*)
 {
-	if ( !item )
+	if ( !current )
 		return;
 
-	BookmarkItem* treeitem = (BookmarkItem*) item;
+	BookmarkItem* treeitem = (BookmarkItem*) current;
 
 	if ( ::mainWindow->currentBrowser()->getOpenedPage().toString() != treeitem->m_url )
 	{
@@ -254,12 +249,19 @@ void TabBookmarks::onItemActivated(QListWidgetItem* item)
 	}
 }
 
+void TabBookmarks::onItemActivated(QListWidgetItem* item, int)
+{
+	onCurrentItemChanged(item, nullptr);
+	// Focus on the view window so keyboard scroll works
+	::mainWindow->currentBrowser()->setFocus( Qt::OtherFocusReason );
+}
+
 void TabBookmarks::actionBookmarkActivated()
 {
 	QAction* action = qobject_cast< QAction* >(sender());
 
 	BookmarkItem* item = (BookmarkItem*) action->data().value< void* > ();
-	onItemActivated( item );
+	onItemActivated( item, 0 );
 }
 
 void TabBookmarks::onContextMenuRequested(const QPoint& point)
