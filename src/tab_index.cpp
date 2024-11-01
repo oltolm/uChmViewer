@@ -33,6 +33,7 @@
 #include "showwaitcursor.h" // ShowWaitCursor
 #include "tab_index.h"      // TabIndex, QWidget
 #include "treeitem_index.h" // TreeItem_Index
+#include "viewwindow.h"     // ViewWindow
 
 
 TabIndex::TabIndex ( QWidget* parent )
@@ -53,20 +54,15 @@ TabIndex::TabIndex ( QWidget* parent )
 	         this,
 	         SLOT( onReturnPressed() ) );
 
-	if ( pConfig->m_tabUseSingleClick )
-	{
-		connect( tree,
-		         SIGNAL( itemClicked(QTreeWidgetItem*, int)),
-		         this,
-		         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
-	}
-	else
-	{
-		connect( tree,
-		         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
-		         this,
-		         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
-	}
+	connect( tree,
+	         SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ),
+	         this,
+	         SLOT( onCurrentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+
+	connect( tree,
+	         SIGNAL( itemActivated ( QTreeWidgetItem*, int ) ),
+	         this,
+	         SLOT( onItemActivated( QTreeWidgetItem*, int ) ) );
 
 	// Activate custom context menu, and connect it
 	tree->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -121,12 +117,12 @@ void TabIndex::invalidate( )
 	m_lastSelectedItem = 0;
 }
 
-void TabIndex::onItemActivated ( QTreeWidgetItem* item, int )
+void TabIndex::onCurrentItemChanged ( QTreeWidgetItem* current, QTreeWidgetItem* )
 {
-	if ( !item )
+	if ( !current )
 		return;
 
-	TreeItem_Index* treeitem = (TreeItem_Index*) item;
+	TreeItem_Index* treeitem = (TreeItem_Index*) current;
 
 	QUrl url = treeitem->getUrl();
 
@@ -148,6 +144,13 @@ void TabIndex::onItemActivated ( QTreeWidgetItem* item, int )
 	}
 	else
 		::mainWindow->openPage( url, MainWindow::OPF_CONTENT_TREE );
+}
+
+void TabIndex::onItemActivated( QTreeWidgetItem* item, int )
+{
+	onCurrentItemChanged(item, nullptr);
+	// Focus on the view window so keyboard scroll works
+	::mainWindow->currentBrowser()->setFocus( Qt::OtherFocusReason );
 }
 
 void TabIndex::refillIndex( )
@@ -210,7 +213,7 @@ void TabIndex::refillIndex( )
 			item = new TreeItem_Index( tree, lastchild[indent], data[i].name, data[i].urls, data[i].seealso );
 		else
 		{
-			// New non-root entry. It is possible (for some buggy CHMs) that there is no previous entry: previoous entry had indent 1,
+			// New non-root entry. It is possible (for some buggy CHMs) that there is no previous entry: previous entry had indent 1,
 			// and next entry has indent 3. Backtracking it up, creating missing entries.
 			if ( rootentry[indent - 1] == 0 )
 				qFatal("Child entry indented as %d with no root entry!", indent);

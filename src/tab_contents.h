@@ -48,7 +48,8 @@ class TabContents : public QWidget, public Ui::TabContents
 
 	public slots:
 		void    onContextMenuRequested ( const QPoint& point );
-		void    onClicked ( QTreeWidgetItem* item, int column );
+		void    onCurrentItemChanged ( QTreeWidgetItem* current, QTreeWidgetItem* previous );
+		void    onItemActivated ( QTreeWidgetItem* item, int );
 
 	private:
 		QMenu*      m_contextMenu;

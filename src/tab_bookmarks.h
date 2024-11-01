@@ -51,7 +51,8 @@ class TabBookmarks : public QWidget, public Ui::TabBookmarks
 		void    actionBookmarkActivated();
 		void    onDelBookmarkPressed( );
 		void    onEditBookmarkPressed( );
-		void    onItemActivated ( QListWidgetItem* );
+		void    onItemActivated ( QListWidgetItem*, int );
+		void    onCurrentItemChanged ( QListWidgetItem*, QListWidgetItem* );
 		void    onContextMenuRequested ( const QPoint& point );
 
 	private:
