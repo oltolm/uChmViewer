@@ -107,6 +107,8 @@ void TabIndex::onReturnPressed( )
 
 	TreeItem_Index* treeitem = (TreeItem_Index*) m_lastSelectedItem;
 	::mainWindow->activateUrl( treeitem->getUrl() );
+	// Focus on the view window so keyboard scroll works
+	::mainWindow->currentBrowser()->setFocus( Qt::OtherFocusReason );
 }
 
 void TabIndex::invalidate( )
