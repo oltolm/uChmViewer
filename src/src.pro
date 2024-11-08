@@ -29,6 +29,7 @@ HEADERS += \
     dialog_setup.h \
     kde-qt.h \
     mainwindow.h \
+    mylineedit.h \
     recentfiles.h \
     settings.h \
     tab_bookmarks.h \
@@ -54,6 +55,7 @@ SOURCES += \
     dialog_setup.cpp \
     main.cpp \
     mainwindow.cpp \
+    mylineedit.cpp \
     recentfiles.cpp \
     settings.cpp \
     tab_bookmarks.cpp \
