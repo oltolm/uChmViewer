@@ -15,6 +15,7 @@ set(CPP_SOURCES
     i18n.h
     main.cpp
     mainwindow.cpp
+    mylineedit.cpp
     mainwindow.h
     mimehelper.cpp
     mimehelper.h
@@ -48,6 +49,7 @@ set(MOC_HEADERS
     dialog_chooseurlfromlist.h
     dialog_setup.h
     mainwindow.h
+    mylineedit.h
     recentfiles.h
     tab_bookmarks.h
     tab_contents.h
