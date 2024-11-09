@@ -154,6 +154,10 @@ MainWindow::MainWindow( const QStringList& arguments )
 
 	// Basically disable everything
 	updateActions();
+
+	QSettings settings;
+	restoreGeometry(settings.value("settings/geometry").toByteArray());
+	restoreState(settings.value("settings/state").toByteArray());
 }
 
 MainWindow::~MainWindow()
@@ -556,6 +560,10 @@ void MainWindow::closeEvent ( QCloseEvent* e )
 
 	// Save toolbars
 	m_toolbarMgr->save();
+
+	QSettings settings;
+	settings.setValue("settings/geometry", saveGeometry());
+	settings.setValue("settings/state", saveState());
 
 	QMainWindow::closeEvent ( e );
 }
