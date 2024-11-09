@@ -48,10 +48,10 @@ NavigationPanel::NavigationPanel( QWidget* parent )
 
 	// Add the required tabs
 	m_searchTab = new TabSearch(m_tabWidget);
-	m_tabWidget->addTab( m_searchTab, i18n( "Search" ) );
+	m_tabWidget->addTab( m_searchTab, i18n( "&Search" ) );
 
 	m_bookmarksTab = new TabBookmarks( m_tabWidget );
-	m_tabWidget->addTab( m_bookmarksTab, i18n("Bookmarks") );
+	m_tabWidget->addTab( m_bookmarksTab, i18n("&Bookmarks") );
 
 	// Those tabs will be added later
 	m_contentsTab = 0;
@@ -91,13 +91,13 @@ void NavigationPanel::updateTabs( EBook* file )
 	if ( file->hasFeature( EBook::FEATURE_INDEX) )
 	{
 		m_indexTab = new TabIndex(m_tabWidget);
-		m_tabWidget->insertTab( 0, m_indexTab, i18n( "Index" ) );
+		m_tabWidget->insertTab( 0, m_indexTab, i18n( "I&ndex" ) );
 	}
 
 	if ( file->hasFeature( EBook::FEATURE_TOC) )
 	{
 		m_contentsTab = new TabContents( m_tabWidget );
-		m_tabWidget->insertTab( 0, m_contentsTab, i18n( "Contents" ) );
+		m_tabWidget->insertTab( 0, m_contentsTab, i18n( "&Contents" ) );
 	}
 }
 
